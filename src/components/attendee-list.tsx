@@ -10,6 +10,7 @@ import { IconButton } from "./icon-button";
 import { Table } from "./table";
 import { TableHeader } from "./table-header";
 import { TableCell } from "./table-cell";
+import { TableRow } from "./table-row";
 
 export function AttendeeList() {
   return (
@@ -27,7 +28,7 @@ export function AttendeeList() {
 
       <Table>
         <thead>
-          <tr className="border-b border-white/10">
+          <TableRow>
             <TableHeader className="px-4 py-3 font-semibold text-sm text-left">
               <input
                 type="checkbox"
@@ -39,7 +40,7 @@ export function AttendeeList() {
             <TableHeader>Data de inscrição</TableHeader>
             <TableHeader>Data do check-in</TableHeader>
             <TableHeader></TableHeader>
-          </tr>
+          </TableRow>
         </thead>
         <tbody>
           {Array.from({ length: 10 }).map((_, i) => {
