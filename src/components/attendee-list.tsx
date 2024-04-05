@@ -11,8 +11,26 @@ import { Table } from "./table";
 import { TableHeader } from "./table-header";
 import { TableCell } from "./table-cell";
 import { TableRow } from "./table-row";
+import { attendees } from "../data/attendees";
+import { useState } from "react";
 
 export function AttendeeList() {
+  const [page, setPage] = useState(1);
+  const totalPages = Math.ceil(attendees.length / 10);
+
+  function goToNextPage() {
+    setPage(page + 1);
+  }
+  function goToPreviousPage() {
+    setPage(page - 1);
+  }
+  function goToFirstPage() {
+    setPage(1);
+  }
+  function goToLastPage() {
+    setPage(totalPages);
+  }
+
   return (
     <div className="flex flex-col gap-4">
       <div className="flex gap-3 items-center">
@@ -43,24 +61,31 @@ export function AttendeeList() {
           </TableRow>
         </thead>
         <tbody>
-          {Array.from({ length: 10 }).map((_, i) => {
+          {attendees.slice((page - 1) * 10, page * 10).map((attendee) => {
             return (
-              <tr key={i} className="border-b border-white/10 hover:bg-white/5">
+              <tr
+                key={attendee.id}
+                className="border-b border-white/10 hover:bg-white/5"
+              >
                 <TableCell>
                   <input
                     type="checkbox"
                     className="size-4 bg-black/20 rounded border border-white/10"
                   />
                 </TableCell>
-                <TableCell>12375</TableCell>
+                <TableCell>{attendee.id}</TableCell>
                 <TableCell>
                   <div className="flex flex-col gap-1">
-                    <span className="font-semibold text-white">Jeong Lee</span>
-                    <span>jeeonglee.dev@gmail.com</span>
+                    <span className="font-semibold text-white">
+                      {attendee.name}
+                    </span>
+                    <span>{attendee.email}</span>
                   </div>
                 </TableCell>
-                <TableCell>7 dias atrás</TableCell>
-                <TableCell>3 dias atrás</TableCell>
+                <TableCell>{attendee.createdAt.toLocaleDateString()}</TableCell>
+                <TableCell>
+                  {attendee.checkedInAt.toLocaleDateString()}
+                </TableCell>
                 <TableCell>
                   <IconButton transparent>
                     <MoreHorizontal className="size-4" />
@@ -72,21 +97,31 @@ export function AttendeeList() {
         </tbody>
         <tfoot>
           <tr>
-            <TableCell colSpan={3}>Mostrando 10 de 228 itens</TableCell>
+            <TableCell colSpan={3}>
+              Mostrando 10 de {attendees.length} itens
+            </TableCell>
             <TableCell className="text-right" colSpan={3}>
               <div className="inline-flex items-center gap-8">
-                <span>Página 1 de 23</span>
+                <span>
+                  Página {page} de {totalPages}
+                </span>
                 <div className="flex gap-1.5">
-                  <IconButton>
+                  <IconButton onClick={goToFirstPage} disabled={page === 1}>
                     <ChevronsLeft className="size-4" />
                   </IconButton>
-                  <IconButton>
+                  <IconButton onClick={goToPreviousPage} disabled={page === 1}>
                     <ChevronLeft className="size-4" />
                   </IconButton>
-                  <IconButton>
+                  <IconButton
+                    onClick={goToNextPage}
+                    disabled={page === totalPages}
+                  >
                     <ChevronRight className="size-4" />
                   </IconButton>
-                  <IconButton>
+                  <IconButton
+                    onClick={goToLastPage}
+                    disabled={page === totalPages}
+                  >
                     <ChevronsRight className="size-4" />
                   </IconButton>
                 </div>
